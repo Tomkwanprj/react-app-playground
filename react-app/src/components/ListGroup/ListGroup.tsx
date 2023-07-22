@@ -1,5 +1,19 @@
 import { useState } from "react";
-import styles from "./ListGroup.module.css";
+import styled from "styled-components";
+
+const List = styled.ul`
+  list-style: none;
+  padding: 0;
+`;
+
+interface ListItemProps {
+  active: boolean;
+}
+
+const ListItem = styled.li<ListItemProps>`
+  padding: 5px 0;
+  background: ${(prop) => (prop.active ? "blue" : "none")};
+`;
 
 // {items: [], heading: string}
 // take it as a parameter of the component
@@ -15,32 +29,28 @@ function ListGroup({ items, heading, onSelectItem }: ListGroupProps) {
   // arr[0] = variable
   // arr[1] = updater function
   // const [name, setName] = useState();
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
     <>
       <h1>{heading}</h1>
       {items.length === 0 ? <p>No item found</p> : null}
-      <ul className={[styles.ListGroup, styles.container].join("")}>
+      <List>
         {/*SyntheticBaseEvent is a wrapper of wrapping different event objects in different browser*/}
         {/*handleClick() function would not be called, just want to pass a reference to React, it would be called in runtime*/}
         {items.map((item, index) => (
-          <li
+          <ListItem
+            active={index === selectedIndex}
             key={item}
-            className={
-              selectedIndex === index
-                ? "list-group-item active"
-                : "list-group-item"
-            }
             onClick={() => {
               setSelectedIndex(index);
               onSelectItem(item);
             }}
           >
             {item}
-          </li>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </>
   );
 }
