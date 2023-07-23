@@ -2,6 +2,7 @@ import { useState } from "react";
 import Alert from "./components/Alert";
 import Button from "./components/Button/Button";
 import ListGroup from "./components/ListGroup";
+import Like from "./components/Like";
 import "./App.css";
 import { BsFillCalendarCheckFill } from "react-icons/bs";
 
@@ -27,6 +28,10 @@ function App() {
     updateVisibility(true);
   };
 
+  const handleLikeItem = () => {
+    console.log("Like is clicked");
+  };
+
   return (
     <>
       <BsFillCalendarCheckFill color="red" size={40}></BsFillCalendarCheckFill>
@@ -42,6 +47,8 @@ function App() {
           <span>Hello World</span>
         </Alert>
       ) : null}
+
+      <Like onLikeClicked={handleLikeItem}></Like>
 
       <Button
         children="Hello World"
