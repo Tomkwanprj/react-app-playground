@@ -32,6 +32,27 @@ function App() {
     console.log("Like is clicked");
   };
 
+  const [drink, setDrink] = useState({
+    title: "Tom",
+    price: 5,
+  });
+
+  const handleDrinkClick = () => {
+    setDrink({ ...drink, price: drink.price + 1 });
+  };
+
+  const [person, setPerson] = useState({
+    name: "Tom",
+    address: {
+      city: "San Francisco",
+      zipCode: 94111,
+    },
+  });
+
+  const handlePersonClick = () => {
+    setPerson({ ...person, address: { ...person.address, zipCode: 123123 } });
+  };
+
   return (
     <>
       <BsFillCalendarCheckFill color="red" size={40}></BsFillCalendarCheckFill>
@@ -50,10 +71,11 @@ function App() {
 
       <Like onLikeClicked={handleLikeItem}></Like>
 
+      {person.address.zipCode}
       <Button
         children="Hello World"
         color="primary"
-        onButtonClicked={handleButtonClickItem}
+        onButtonClicked={handlePersonClick}
       ></Button>
     </>
   );
