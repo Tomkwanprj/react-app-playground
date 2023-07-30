@@ -1,1 +1,5 @@
 /* index.css global style for the application */ 
+
+body{
+    padding: 20px;
+}

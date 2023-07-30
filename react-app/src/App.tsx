@@ -9,6 +9,7 @@ import produce from "immer";
 import NavBar from "./components/NavBar";
 import Cart from "./components/Cart";
 import ExpandableText from "./components/ExpandableText";
+import Form from "./components/Form/Form";
 
 /* 
   Props                        State
@@ -75,7 +76,7 @@ function App() {
 
   return (
     <>
-      <div>
+      {/* <div>
         <ExpandableText maxChar={20}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
           bibendum aliquam justo. Donec placerat molestie volutpat. Sed interdum
@@ -146,7 +147,9 @@ function App() {
         <Button color="primary" onButtonClicked={handleCartClick}>
           "Hello World"
         </Button>
-      </div>
+      </div> */}
+
+      <Form></Form>
     </>
   );
 }
