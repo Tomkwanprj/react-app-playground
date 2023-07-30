@@ -1,6 +1,8 @@
 import { useState, useRef, FormEvent } from "react";
+import { useForm, FieldValues } from "react-hook-form";
 
 const Form = () => {
+  // React ref hook
   // Current property of ref object references a DOM node.
   // Initially, when we create a ref object, we dont have access to the DOM node
   // because the DOM is created after react renders our componenets
@@ -14,31 +16,33 @@ const Form = () => {
   // Also, input fields have their own state and we have react state called person. It is possible that
   // these sources get out of sync. We should maintain the single source of truth and singleton.
 
-  const [person, setPerson] = useState({
-    name: "",
-    age: "",
-  });
+  // React state hook
+  //   const [person, setPerson] = useState({
+  //     name: "",
+  //     age: "",
+  //   });
 
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    // if (nameRef.current !== null) person.name = nameRef.current.value;
-    // if (ageRef.current !== null) person.age = parseInt(ageRef.current.value);
-    console.log(person);
-  };
+  //   const handleSubmit = (event: FormEvent) => {
+  //     event.preventDefault();
+  //     // if (nameRef.current !== null) person.name = nameRef.current.value;
+  //     // if (ageRef.current !== null) person.age = parseInt(ageRef.current.value);
+  //     console.log(person);
+  //   };
+
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = (data: FieldValues) => console.log(data);
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         {/* div.mb-3>label.form-label+input.form-control */}
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name
           </label>
           <input
-            value={person.name}
-            onChange={(event) =>
-              setPerson({ ...person, name: event.target.value })
-            }
+            {...register("name")}
             id="name"
             type="text"
             className="form-control"
@@ -51,10 +55,7 @@ const Form = () => {
             Age
           </label>
           <input
-            value={person.age}
-            onChange={(event) =>
-              setPerson({ ...person, age: parseInt(event.target.value) })
-            }
+            {...register("age")}
             id="age"
             type="number"
             className="form-control"
