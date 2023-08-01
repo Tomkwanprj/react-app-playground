@@ -1,5 +1,22 @@
 import { useState, useRef, FormEvent } from "react";
 import { useForm, FieldValues } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
+  age: z
+    .number({ invalid_type_error: "Age field is required" })
+    .positive({ message: "Age must be positive" })
+    .min(18, { message: "Age must be at least 18 years old" }),
+});
+
+// interface FormData {
+//   name: string;
+//   age: string;
+// }
+
+type FormData = z.infer<typeof schema>;
 
 const Form = () => {
   // React ref hook
@@ -10,6 +27,13 @@ const Form = () => {
   //  const nameRef = useRef<HTMLInputElement>(null);
   //  const ageRef = useRef<HTMLInputElement>(null);
   //  const person = { name: "", age: 0 };
+
+  //   const handleSubmit = (event: FormEvent) => {
+  //     event.preventDefault();
+  //     // if (nameRef.current !== null) person.name = nameRef.current.value;
+  //     // if (ageRef.current !== null) person.age = parseInt(ageRef.current.value);
+  //     console.log(person);
+  //   };
 
   // Using react state hook will render our compoenet every time when user change the input field,
   // it might cause performance issue.
@@ -22,14 +46,11 @@ const Form = () => {
   //     age: "",
   //   });
 
-  //   const handleSubmit = (event: FormEvent) => {
-  //     event.preventDefault();
-  //     // if (nameRef.current !== null) person.name = nameRef.current.value;
-  //     // if (ageRef.current !== null) person.age = parseInt(ageRef.current.value);
-  //     console.log(person);
-  //   };
-
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const onSubmit = (data: FieldValues) => console.log(data);
 
@@ -47,6 +68,13 @@ const Form = () => {
             type="text"
             className="form-control"
           />
+          {errors.name ? (
+            <p className="text-danger">{errors.name.message}</p>
+          ) : null}
+
+          {/* {errors.name?.type === "required" ? (
+          <p className="text-danger">The name field is required</p>
+        ) : null} */}
         </div>
 
         {/* div.mb-3>label.form-label+input[type=number].form-control */}
@@ -55,11 +83,14 @@ const Form = () => {
             Age
           </label>
           <input
-            {...register("age")}
+            {...register("age", { valueAsNumber: true })}
             id="age"
             type="number"
             className="form-control"
           />
+          {errors.age ? (
+            <p className="text-danger">{errors.age.message}</p>
+          ) : null}
         </div>
         <br />
         <button className="btn btn-primary" type="submit">
