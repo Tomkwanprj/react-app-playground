@@ -10,6 +10,9 @@ import NavBar from "./components/NavBar";
 import Cart from "./components/Cart";
 import ExpandableText from "./components/ExpandableText";
 import Form from "./components/Form/Form";
+import ExpenseTracker from "./expenseTracker/components/ExpenseForm/ExpenseForm";
+import ExpenseList from "./expenseTracker/components/ExpenseList/ExpenseList";
+import ExpenseFilter from "./expenseTracker/components/ExpenseFilter/ExpenseFilter";
 
 /* 
   Props                        State
@@ -19,6 +22,13 @@ import Form from "./components/Form/Form";
   Re-render the component    , Re-render the component
   Update the dom             , Update the dom
 */
+
+export interface Expense {
+  id: number;
+  description: string;
+  amount: number;
+  category: string;
+}
 
 function App() {
   let items = ["New York", "San Fransico", "Tokyo", "London", "Paris"];
@@ -72,6 +82,26 @@ function App() {
         item.id === 1 ? { ...item, quantity: 2 } : item
       ),
     });
+  };
+
+  const [expenseList, setExpenseList] = useState<Expense[]>([
+    { id: 1, description: "Milk", amount: 5, category: "Groceries" },
+    { id: 2, description: "Eggs", amount: 10, category: "Groceries" },
+  ]);
+
+  const [selectedCategory, setSelectedCategory] = useState<string>("Groceries");
+
+  const handleDeleteExpense = (id: number) => {
+    setExpenseList(
+      produce((draft) => {
+        const index = draft.findIndex((expense) => expense.id == id);
+        if (index !== -1) draft.splice(index, 1);
+      })
+    );
+  };
+
+  const handleSelect = (value: string) => {
+    setSelectedCategory(value);
   };
 
   return (
@@ -149,7 +179,15 @@ function App() {
         </Button>
       </div> */}
 
-      <Form></Form>
+      {/* <Form></Form> */}
+
+      <ExpenseFilter handleSelect={handleSelect}></ExpenseFilter>
+
+      <ExpenseList
+        expenseList={expenseList}
+        handleDelete={handleDeleteExpense}
+        catagory={selectedCategory}
+      ></ExpenseList>
     </>
   );
 }
