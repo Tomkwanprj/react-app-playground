@@ -1,4 +1,5 @@
 import React from "react";
+import categoryList from "../../categories";
 
 interface ExpenseFilterProps {
   handleSelect: (value: string) => void;
@@ -12,9 +13,11 @@ const ExpenseFilter = ({ handleSelect }: ExpenseFilterProps) => {
         onChange={(event) => handleSelect(event.target.value)}
       >
         <option value="All">All categories</option>
-        <option value="Groceries">Groceries</option>
-        <option value="Utilities">Utilities</option>
-        <option value="Entertainment">Entertainment</option>
+        {categoryList.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
       </select>
     </>
   );

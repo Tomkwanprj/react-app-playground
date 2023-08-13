@@ -13,6 +13,7 @@ import Form from "./components/Form/Form";
 import ExpenseTracker from "./expenseTracker/components/ExpenseForm/ExpenseForm";
 import ExpenseList from "./expenseTracker/components/ExpenseList/ExpenseList";
 import ExpenseFilter from "./expenseTracker/components/ExpenseFilter/ExpenseFilter";
+import ExpenseForm from "./expenseTracker/components/ExpenseForm/ExpenseForm";
 
 /* 
   Props                        State
@@ -21,6 +22,12 @@ import ExpenseFilter from "./expenseTracker/components/ExpenseFilter/ExpenseFilt
   Immutable                  , Mutable
   Re-render the component    , Re-render the component
   Update the dom             , Update the dom
+*/
+
+/*
+  Do not create another new state variable when you
+  can compute the value of it by using the existing
+  one
 */
 
 export interface Expense {
@@ -84,6 +91,7 @@ function App() {
     });
   };
 
+  //ExpenseTracker Section
   const [expenseList, setExpenseList] = useState<Expense[]>([
     { id: 1, description: "Milk", amount: 5, category: "Groceries" },
     { id: 2, description: "Eggs", amount: 10, category: "Groceries" },
@@ -143,12 +151,31 @@ function App() {
 
       {/* <Form></Form> */}
 
-      <ExpenseFilter handleSelect={handleSelect}></ExpenseFilter>
-      <br />
+      <div className="mb-5">
+        <ExpenseForm
+          onSubmit={(expense) =>
+            setExpenseList(
+              produce((draft) => {
+                draft.push({
+                  id: draft.length + 1,
+                  ...expense,
+                });
+              })
+            )
+          }
+        ></ExpenseForm>
+      </div>
+
+      <div className="mb-3">
+        <ExpenseFilter handleSelect={handleSelect}></ExpenseFilter>
+      </div>
+
       <ExpenseList
-        expenseList={expenseList}
+        expenseList={expenseList.filter(
+          (expense) =>
+            expense.category == selectedCategory || selectedCategory == "All"
+        )}
         handleDelete={handleDeleteExpense}
-        catagory={selectedCategory}
       ></ExpenseList>
     </>
   );
