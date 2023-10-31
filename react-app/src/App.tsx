@@ -83,11 +83,21 @@ function App() {
 
   //how to handle a object with array in it
   const handleCartClick = () => {
+    //Immer
+    // setCart(
+    //   produce((draft) => {
+    //     const item = draft.items.find((item) => (item.id = 1));
+    //     if (item) item.quantity = 2;
+    //   })
+    // );
+    //Immutable way
     setCart({
       ...cart,
-      items: cart.items.map((item) =>
-        item.id === 1 ? { ...item, quantity: 2 } : item
-      ),
+      items: [
+        ...cart.items.map((item) =>
+          item.id == 1 ? { ...item, quantity: 2 } : item
+        ),
+      ],
     });
   };
 
@@ -112,6 +122,45 @@ function App() {
 
   const handleSelect = (value: string) => {
     setSelectedCategory(value);
+  };
+
+  const [game, setGame] = useState({
+    id: 1,
+    player: {
+      name: "John",
+    },
+  });
+
+  const handleGameClick = () => {
+    //Immer
+    // setGame(
+    //   produce((draft) => {
+    //     draft.player.name = "Bob";
+    //   })
+    // );
+
+    //Immutable way
+    setGame({ ...game, player: { ...game.player, name: "Bob" } });
+  };
+
+  const [pizza, setPizza] = useState({
+    name: "Spicy Pepperoni",
+    toppings: ["Mushroom"],
+  });
+
+  const handlePizzaClick = () => {
+    //Immer
+    // setPizza(
+    //   produce((draft) => {
+    //     draft.toppings.push("Tomato");
+    //   })
+    // );
+    //Immutable way
+    // const temp = pizza;
+    // temp.toppings.push("Tomato");
+    // setPizza({ ...temp });
+
+    setPizza({ ...pizza, toppings: [...pizza.toppings, "Tomato"] });
   };
 
   return (
@@ -150,6 +199,26 @@ function App() {
       </div> */}
 
       {/* <Form></Form> */}
+
+      {/* <div className={`${game.id}`}> {game.player.name} </div>
+      <button onClick={handleGameClick}>Click me</button> */}
+
+      {/* <div>
+        {pizza.name}
+        {pizza.toppings.map((topping) => (
+          <div>{topping}</div>
+        ))}
+      </div>
+      <button onClick={handlePizzaClick}>Click me</button> */}
+
+      <ol>
+        {cart.items.map((item) => (
+          <li>
+            {item.id} {item.title} : {item.quantity}
+          </li>
+        ))}
+      </ol>
+      <button onClick={handleCartClick}>Click me</button>
 
       <div className="mb-5">
         <ExpenseForm
