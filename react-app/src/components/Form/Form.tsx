@@ -41,10 +41,26 @@ const Form = () => {
   // these sources get out of sync. We should maintain the single source of truth and singleton.
 
   // React state hook
-  //   const [person, setPerson] = useState({
-  //     name: "",
-  //     age: "",
-  //   });
+  // const [person, setPerson] = useState({
+  //   name: "",
+  //   age: 0,
+  // });
+
+  // <input
+  //   type="text"
+  //   value={person.name} !Important
+  //   onChange={(event) => setPerson({ ...person, name: event.target.value })}
+  // ></input>;
+
+  // <input
+  //   type="number"
+  //   value={person.age}
+  //   onChange={(event) =>
+  //     setPerson({ ...person, age: parseInt(event.target.value) })
+  //   }
+  // ></input>;
+
+  console.log(useForm);
 
   const {
     register,
