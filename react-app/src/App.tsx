@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Alert from "./components/Alert";
 import Button from "./components/Button/Button";
 import ListGroup from "./components/ListGroup";
@@ -30,6 +30,11 @@ import { FieldValues } from "react-hook-form";
   Do not create another new state variable when you
   can compute the value of it by using the existing
   one
+*/
+
+/*
+  If none of the action is affecting the rendering state,
+  we can use useEffect();
 */
 
 export interface Expense {
@@ -168,8 +173,34 @@ function App() {
       )
     : expenseList;
 
+  const nameRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (nameRef.current) nameRef.current.focus();
+  });
+
+  useEffect(() => {
+    document.title = "My App";
+  });
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    console.log(nameRef.current?.value);
+  };
+
   return (
     <>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">Name</label>
+          <input ref={nameRef} id="name" type="text" className="form-control" />
+        </div>
+
+        <button className="btn btn-primary" type="submit">
+          Submit
+        </button>
+      </form>
+
       <div className="mb-3">
         <ExpenseForm
           handleAddClick={(newExpense) =>
