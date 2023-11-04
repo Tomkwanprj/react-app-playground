@@ -11,9 +11,11 @@ import Cart from "./components/Cart";
 import ExpandableText from "./components/ExpandableText";
 import Form from "./components/Form/Form";
 import ExpenseTracker from "./expenseTracker/components/ExpenseForm/ExpenseForm";
+import categoryList from "./expenseTracker/categories";
 import ExpenseList from "./expenseTracker/components/ExpenseList/ExpenseList";
 import ExpenseFilter from "./expenseTracker/components/ExpenseFilter/ExpenseFilter";
 import ExpenseForm from "./expenseTracker/components/ExpenseForm/ExpenseForm";
+import { FieldValues } from "react-hook-form";
 
 /* 
   Props                        State
@@ -101,29 +103,6 @@ function App() {
     });
   };
 
-  //ExpenseTracker Section
-  const [expenseList, setExpenseList] = useState<Expense[]>([
-    { id: 1, description: "Milk", amount: 5, category: "Groceries" },
-    { id: 2, description: "Eggs", amount: 10, category: "Groceries" },
-    { id: 3, description: "Game", amount: 100, category: "Entertainment" },
-    { id: 4, description: "Towel", amount: 40, category: "Utilities" },
-  ]);
-
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-
-  const handleDeleteExpense = (id: number) => {
-    setExpenseList(
-      produce((draft) => {
-        const index = draft.findIndex((expense) => expense.id == id);
-        if (index !== -1) draft.splice(index, 1);
-      })
-    );
-  };
-
-  const handleSelect = (value: string) => {
-    setSelectedCategory(value);
-  };
-
   const [game, setGame] = useState({
     id: 1,
     player: {
@@ -163,8 +142,61 @@ function App() {
     setPizza({ ...pizza, toppings: [...pizza.toppings, "Tomato"] });
   };
 
+  //ExpenseTracker Section
+  const [expenseList, setExpenseList] = useState<Expense[]>([
+    { id: 1, description: "Milk", amount: 5.0, category: "Groceries" },
+    { id: 2, description: "Eggs", amount: 10.0, category: "Groceries" },
+    { id: 3, description: "Game", amount: 100.0, category: "Entertainment" },
+    { id: 4, description: "Towel", amount: 40.0, category: "Utilities" },
+  ]);
+
+  const [selectedCategory, setselectedCategory] = useState<string>("All");
+
+  const handleDeleteClick = (id: number) => {
+    setExpenseList(
+      produce((draft) => {
+        const index = draft.findIndex((expense) => expense.id == id);
+        draft.splice(index, 1);
+      })
+    );
+  };
+
+  const visibleExpenses = selectedCategory
+    ? expenseList.filter(
+        (expense) =>
+          expense.category == selectedCategory || selectedCategory == "All"
+      )
+    : expenseList;
+
   return (
     <>
+      <div className="mb-3">
+        <ExpenseForm
+          handleAddClick={(newExpense) =>
+            setExpenseList([
+              ...expenseList,
+              {
+                id: expenseList.length + 1,
+                ...newExpense,
+              },
+            ])
+          }
+        ></ExpenseForm>
+      </div>
+
+      <div className="mb-3">
+        <ExpenseFilter
+          handleSelect={(category) => setselectedCategory(category)}
+        ></ExpenseFilter>
+      </div>
+
+      <div className="mb-3">
+        <ExpenseList
+          expenseList={visibleExpenses}
+          handleDeleteClick={handleDeleteClick}
+        ></ExpenseList>
+      </div>
+
       {/* <div>
         <ExpandableText maxChar={20}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
@@ -211,41 +243,14 @@ function App() {
       </div>
       <button onClick={handlePizzaClick}>Click me</button> */}
 
-      <ol>
+      {/* <ol>
         {cart.items.map((item) => (
           <li>
             {item.id} {item.title} : {item.quantity}
           </li>
         ))}
       </ol>
-      <button onClick={handleCartClick}>Click me</button>
-
-      <div className="mb-5">
-        <ExpenseForm
-          onSubmit={(expense) =>
-            setExpenseList(
-              produce((draft) => {
-                draft.push({
-                  id: draft.length + 1,
-                  ...expense,
-                });
-              })
-            )
-          }
-        ></ExpenseForm>
-      </div>
-
-      <div className="mb-3">
-        <ExpenseFilter handleSelect={handleSelect}></ExpenseFilter>
-      </div>
-
-      <ExpenseList
-        expenseList={expenseList.filter(
-          (expense) =>
-            expense.category == selectedCategory || selectedCategory == "All"
-        )}
-        handleDelete={handleDeleteExpense}
-      ></ExpenseList>
+      <button onClick={handleCartClick}>Click me</button> */}
     </>
   );
 }

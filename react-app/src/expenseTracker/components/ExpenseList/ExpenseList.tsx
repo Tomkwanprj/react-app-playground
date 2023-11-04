@@ -1,22 +1,22 @@
+import React from "react";
 import { Expense } from "../../../App";
 
-interface ExpenseListProps {
+interface ExpenseLitProp {
   expenseList: Expense[];
-  handleDelete: (id: number) => void;
+  handleDeleteClick: (id: number) => void;
 }
 
-const ExpenseList = ({ expenseList, handleDelete }: ExpenseListProps) => {
-  if (expenseList.length == 0) return null;
-
+const ExpenseList = ({ expenseList, handleDeleteClick }: ExpenseLitProp) => {
   return (
     <>
+      {/* table>thead>tr>th*4 */}
       <table className="table table-bordered">
         <thead>
           <tr>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Category</th>
-            <th> </th>
+            <th scope="col">Description</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Category</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@ const ExpenseList = ({ expenseList, handleDelete }: ExpenseListProps) => {
               <td>
                 <button
                   className="btn btn-outline-danger"
-                  onClick={() => handleDelete(expense.id)}
+                  onClick={() => handleDeleteClick(expense.id)}
                 >
                   Delete
                 </button>
@@ -38,13 +38,14 @@ const ExpenseList = ({ expenseList, handleDelete }: ExpenseListProps) => {
         </tbody>
         <tfoot>
           <tr>
-            <td>Total</td>
+            <td>Total </td>
             <td>
               $
               {expenseList
-                .map((expense) => expense.amount)
                 .reduce(
-                  (accumulator, currentValue) => accumulator + currentValue
+                  (accumulator, currentValue) =>
+                    accumulator + currentValue.amount,
+                  0
                 )
                 .toFixed(2)}
             </td>
