@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { CanceledError } from "../services/api-client";
 import produce from "immer";
 import userService, { User } from "../services/userService";
+import useUsers from "../hooks/useUsers";
 
 //It will cause the infinite loop since the setProducts() will trigger new render and then the useEffect will be executed again.
 // [] means the useEffect dependency
@@ -11,9 +12,8 @@ import userService, { User } from "../services/userService";
 // }, [category]);
 
 const UserList = ({ category }: { category: string }) => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [error, setError] = useState<string>("");
-  const [isLoading, setLoading] = useState(false);
+  const { users, error, isLoading, setUsers, setError, setLoading } =
+    useUsers();
 
   const connect = () => console.log("Connecting...");
   const disconnect = () => console.log("Disconnecting...");
@@ -64,36 +64,6 @@ const UserList = ({ category }: { category: string }) => {
       setUsers(originalUsers);
     });
   };
-
-  useEffect(() => {
-    setLoading(true);
-    const { request, cancel } = userService.getAll<User>();
-    request
-      .then((users) => {
-        setUsers(users.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        if (error instanceof CanceledError) return;
-        setError(error.message);
-        setLoading(false);
-      });
-
-    return () => cancel();
-
-    //Async way
-    // const fetchUsers = async () => {
-    //   try {
-    //     const res = await axios.get<User[]>(
-    //       "https://jsonplaceholder.typicode.com/users"
-    //     );
-    //     setUsers(res.data);
-    //   } catch (error) {
-    //     setError((error as AxiosError).message);
-    //   }
-    // };
-    // fetchUsers();
-  }, []);
 
   useEffect(() => {
     connect();
