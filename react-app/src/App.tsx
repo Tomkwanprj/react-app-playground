@@ -16,6 +16,8 @@ import ExpenseList from "./expenseTracker/components/ExpenseList/ExpenseList";
 import ExpenseFilter from "./expenseTracker/components/ExpenseFilter/ExpenseFilter";
 import ExpenseForm from "./expenseTracker/components/ExpenseForm/ExpenseForm";
 import { FieldValues } from "react-hook-form";
+import UserList from "./components/UserList";
+import axios from "axios";
 
 /* 
   Props                        State
@@ -188,9 +190,23 @@ function App() {
     console.log(nameRef.current?.value);
   };
 
+  const [category, setCategory] = useState<string>("");
+
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <div>
+        <select
+          className="form-select"
+          onChange={(event) => setCategory(event.target.value)}
+        >
+          <option value=""></option>
+          <option value="Clothing">Clothing</option>
+          <option value="Household">Household</option>
+        </select>
+        <UserList category={category}></UserList>
+      </div>
+
+      {/* <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name</label>
           <input ref={nameRef} id="name" type="text" className="form-control" />
@@ -226,7 +242,7 @@ function App() {
           expenseList={visibleExpenses}
           handleDeleteClick={handleDeleteClick}
         ></ExpenseList>
-      </div>
+      </div> */}
 
       {/* <div>
         <ExpandableText maxChar={20}>
