@@ -17,7 +17,7 @@ import ExpenseFilter from "./expenseTracker/components/ExpenseFilter/ExpenseFilt
 import ExpenseForm from "./expenseTracker/components/ExpenseForm/ExpenseForm";
 import { FieldValues } from "react-hook-form";
 import UserList from "./components/UserList";
-import axios from "axios";
+import apiClient from "./services/api-client";
 
 /* 
   Props                        State

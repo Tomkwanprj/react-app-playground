@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from "react";
-import axios, { AxiosError, CanceledError } from "axios";
+import { useEffect, useState } from "react";
+import { CanceledError } from "../services/api-client";
 import produce from "immer";
-
-interface User {
-  id: number;
-  name: string;
-}
+import userService, { User } from "../services/userService";
 
 //It will cause the infinite loop since the setProducts() will trigger new render and then the useEffect will be executed again.
 // [] means the useEffect dependency
@@ -28,8 +24,8 @@ const UserList = ({ category }: { category: string }) => {
     const newUser = { id: 0, name: "Mosh" };
     setUsers([newUser, ...users]);
 
-    axios
-      .post<User>(`https://jsonplaceholder.typicode.com/users`, newUser)
+    userService
+      .add<User>(newUser)
       //destructure
       .then(({ data: saveUser }) => setUsers([saveUser, ...users]))
       .catch((err) => {
@@ -47,15 +43,10 @@ const UserList = ({ category }: { category: string }) => {
       users.map((user) => (user.id == chosenUser.id ? updatedUser : user))
     );
 
-    axios
-      .patch(
-        `https://jsonplaceholder.typicode.com/users/` + chosenUser.id,
-        updatedUser
-      )
-      .catch((err) => {
-        setError(err.message);
-        setUsers(originalUsers);
-      });
+    userService.update<User>(updatedUser).catch((err) => {
+      setError(err.message);
+      setUsers(originalUsers);
+    });
   };
 
   const deleteUser = (user: User) => {
@@ -68,21 +59,16 @@ const UserList = ({ category }: { category: string }) => {
       })
     );
 
-    axios
-      .delete(`https://jsonplaceholder.typicode.com/users/${user.id}`)
-      .catch((err) => {
-        setError(err.message);
-        setUsers(originalUsers);
-      });
+    userService.delete<User>(user.id).catch((err) => {
+      setError(err.message);
+      setUsers(originalUsers);
+    });
   };
 
   useEffect(() => {
-    const controller = new AbortController();
     setLoading(true);
-    axios
-      .get<User[]>("https://jsonplaceholder.typicode.com/users", {
-        signal: controller.signal,
-      })
+    const { request, cancel } = userService.getAll<User>();
+    request
       .then((users) => {
         setUsers(users.data);
         setLoading(false);
@@ -93,7 +79,7 @@ const UserList = ({ category }: { category: string }) => {
         setLoading(false);
       });
 
-    return () => controller.abort();
+    return () => cancel();
 
     //Async way
     // const fetchUsers = async () => {
